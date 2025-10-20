@@ -202,21 +202,78 @@
       box-shadow: 0 0 10px #ff00ff;
     }
 
-    @media (max-width: 768px) {
-      .update-container, .wheel-container {
-        width: 90%;
-        min-height: auto;
-      }
-
-      .wheel-container canvas {
-        width: 300px;
-        height: 300px;
-      }
-
-      .arrow {
-        top: 80px;
-      }
+    
+    /* 📱 Mobilvennlighet (forbedret) */
+@media (max-width: 768px) {
+    body {
+      padding: 10px;
     }
+  
+    h1 {
+      font-size: 2em;
+    }
+  
+    h2 {
+      font-size: 1.3em;
+    }
+  
+    .content-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .schedule-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .schedule {
+      width: 90%;
+    }
+  
+    .attendance-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .update-wheel-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+  
+    .update-container,
+    .wheel-container {
+      width: 95%;
+      min-height: auto;
+      padding: 20px;
+    }
+  
+    .wheel-container canvas {
+      width: 300px !important;
+      height: 300px !important;
+    }
+  
+    .arrow {
+      top: 60px !important;
+      border-top-width: 30px;
+    }
+  
+    .winner-name {
+      font-size: 18px;
+      padding: 6px 10px;
+    }
+  
+    input, button {
+      width: 90%;
+      font-size: 16px;
+    }
+  
+    .main-image {
+      width: 100%;
+      max-width: 400px;
+    }
+  }
   </style>
 </head>
 <body>
