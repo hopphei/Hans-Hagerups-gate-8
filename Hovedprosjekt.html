@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fest i Hans Hagerups gate 8</title>
+  <style>
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      background: radial-gradient(circle at center, #000000 40%, #1a0033 100%);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 200%;
+      height: 200%;
+      background: repeating-radial-gradient(
+        circle at random,
+        rgba(255, 255, 255, 0.05) 0,
+        rgba(255, 255, 255, 0.05) 2px,
+        transparent 3px,
+        transparent 60px
+      );
+      animation: sparkle 30s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes sparkle {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(-50px, -50px) rotate(360deg); }
+    }
+
+    h1 {
+      color: #ff4fff;
+      font-size: 3em;
+      text-shadow: 0 0 20px #ff4fff, 0 0 40px #ff0080;
+      z-index: 2;
+    }
+
+    h2 {
+      color: #00eaff;
+      text-shadow: 0 0 10px #00eaff, 0 0 20px #0088ff;
+    }
+
+    a {
+      color: #ff99ff;
+      text-decoration: none;
+      text-shadow: 0 0 8px #ff4fff;
+    }
+
+    .content-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .main-image {
+      width: 90%;
+      max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0px 0px 30px rgba(255, 0, 255, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .schedule-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .schedule-frame {
+      padding: 20px;
+      border: 3px solid #ff00ff;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+    .schedule {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 15px;
+      width: 300px;
+      box-shadow: 0 0 10px #00eaff;
+    }
+
+    .attendance-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+      margin-top: 40px;
+    }
+
+    input, button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: 0.2s;
+    }
+
+    input {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    button {
+      background: linear-gradient(45deg, #ff00ff, #00eaff);
+      color: white;
+      box-shadow: 0 0 10px #ff00ff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00eaff;
+    }
+
+    .update-wheel-container {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    /* 🎉 STØRRE OG SYMMETRISKE BOKSER */
+    .update-container, .wheel-container {
+      padding: 30px;
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 25px rgba(255, 0, 255, 0.4);
+      width: 400px;
+      min-height: 650px; /* 👈 Gjør begge like høye */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      text-align: center;
+    }
+
+    /* 🎡 STØRRE LYKKEHJUL */
+    .wheel-container canvas {
+      margin-top: 10px;
+      border-radius: 50%;
+      background: white;
+      width: 500px;
+      height: 500px;
+      box-shadow: 0 0 40px #ff00ff;
+      transition: box-shadow 0.3s ease;
+    }
+
+    @keyframes wheelPulse {
+      0% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #00eaff, 0 0 100px #ff00ff; transform: scale(1); }
+      50% { box-shadow: 0 0 60px #ff00ff, 0 0 120px #00eaff, 0 0 180px #ff00ff; transform: scale(1.05); }
+      100% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #00eaff, 0 0 100px #ff00ff; transform: scale(1); }
+    }
+
+    .wheel-container.spinning canvas {
+      animation: wheelPulse 1.2s infinite ease-in-out;
+    }
+
+    .arrow {
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-top: 50px solid #ff0000;
+      position: absolute;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      filter: drop-shadow(0 0 10px #ff0000);
+    }
+
+    .winner-name {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      font-weight: bold;
+      color: #000;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+
+    @media (max-width: 768px) {
+      .update-container, .wheel-container {
+        width: 90%;
+        min-height: auto;
+      }
+
+      .wheel-container canvas {
+        width: 300px;
+        height: 300px;
+      }
+
+      .arrow {
+        top: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Fest i Hans Hagerups gate 8</h1>
+  <img class="main-image" src="IMG_4588.JPG" alt="ait" />
+
+  <div class="content-container">
+    <h2>Simplifisert informasjon som gjør at Edi forstår:</h2>
+
+    <div class="schedule-container schedule-frame">
+      <div class="schedule">
+        <h2>Generell info</h2>
+        <p>Adresse: 3.etasje</p>
+        <p>Props: alle tar med én smirnoff ice til å ice en valgfri person</p>
+        <p>Dresscode: kjole og dress</p>
+        <p>Edi: får lov til å gå med jeans</p>
+        <p>Marius: får lov til å gå med kjole </p>
+      </div>
+
+      <div class="schedule">
+        <h2>Tidsskjema</h2>
+        <p>1900: ankomst til festen</p>
+        <p> Ikke glem oppmøte til kamp er 09.30 på søndag: <a href=https://www.facebook.com/events/1844230736475355 target="_blank">Hansafrokost</a></p>
+        <p> Folk som lett blir fyllesyke kan unngå hyblene i kveld?</p>
+    </div>
+    </div>
+
+    <div class="attendance-container">
+      <div class="image-container">
+        <img src="IMG_4584.JPG" alt="bilde" style="width: 180px; border-radius: 10px;" />
+      </div>
+
+      <div class="attendance">
+        <h2>Meld deg på/av</h2>
+        <input type="text" id="name" placeholder="Ditt navn" />
+        <button id="signupButton">Meld deg på</button>
+        <button id="signOffButton">Meld deg av</button>
+        <h3>Disse kommer:</h3>
+        <ul id="attendees"></ul>
+      </div>
+
+      <div class="image-container">
+        <img src="IMG_8702.HEIC" alt="bilde" style="width: 180px; border-radius: 10px;" />
+      </div>
+    </div>
+
+    <div class="update-wheel-container">
+      <div class="update-container">
+        <h2>Ice-hjulet er faen meg bedre enn noen gang </h2>
+        <p>-Ikke regn med plass til drikken deres i kjøleskapet</p>
+        <p>- Det er beerpong/chandelier på kjøkkenet</p>
+        <p>- Det blir kanskje secret hitler på et soverom</p>
+        <p>🎲 <a href="drikkelek.html" target="_blank">John Olavs Drikkelek!</a></p>
+      </div>
+
+      <div class="wheel-container">
+        <h2>Hvem skal ices? </h2>
+        <div class="arrow"></div>
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        <button id="spinButton">SPINN HJULET!</button>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  import { getDatabase, ref, push, remove, onChildAdded, onChildRemoved, onValue } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtdUtjOaIAaq5ujRGUXie0jx4iqXtk3sE",
+    authDomain: "hans-hagerups-gate-8.firebaseapp.com",
+    databaseURL: "https://hans-hagerups-gate-8-default-rtdb.firebaseio.com",
+    projectId: "hans-hagerups-gate-8",
+    storageBucket: "hans-hagerups-gate-8.firebasestorage.app",
+    messagingSenderId: "973311725897",
+    appId: "1:973311725897:web:c6f9ffcd0979eb55b08a98",
+    measurementId: "G-N3JG38SJQY"
+    };
+
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const attendeesRef = ref(database, "attendees");
+  let attendees = [];
+  let rotationAngle = 0;
+  let spinning = false;
+
+  function drawWheel() {
+    let canvas = document.getElementById("wheelCanvas");
+    let ctx = canvas.getContext("2d");
+    let totalSlices = attendees.length;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (totalSlices === 0) return;
+
+    let startAngle = rotationAngle;
+    let sliceAngle = (Math.PI * 2) / totalSlices;
+    for (let i = 0; i < totalSlices; i++) {
+      ctx.beginPath();
+      ctx.moveTo(250, 250);
+      ctx.arc(250, 250, 240, startAngle, startAngle + sliceAngle);
+      ctx.fillStyle = `hsl(${i * (360 / totalSlices)}, 100%, 70%)`;
+      ctx.fill();
+      ctx.stroke();
+      ctx.save();
+      ctx.translate(250, 250);
+      ctx.rotate(startAngle + sliceAngle / 2);
+      ctx.textAlign = "right";
+      ctx.fillStyle = "black";
+      ctx.font = "20px Arial";
+      ctx.fillText(attendees[i], 220, 5);
+      ctx.restore();
+      startAngle += sliceAngle;
+    }
+  }
+
+  function spinWheel() {
+    if (spinning || attendees.length === 0) return;
+    spinning = true;
+    document.querySelector(".wheel-container").classList.add("spinning");
+
+    let spinSpeed = Math.random() * 20 + 25;
+    let friction = 0.97 + Math.random() * 0.02;
+    let extraRotations = Math.floor(Math.random() * 5 + 5);
+    let targetRotation = rotationAngle + extraRotations * (2 * Math.PI);
+
+    function animateSpin() {
+      spinSpeed *= friction;
+      rotationAngle += spinSpeed * (Math.PI / 180);
+      drawWheel();
+
+      if (spinSpeed < 0.5) {
+        clearInterval(spinInterval);
+        spinning = false;
+        document.querySelector(".wheel-container").classList.remove("spinning");
+        rotationAngle = rotationAngle % (2 * Math.PI);
+        selectWinner();
+      }
+    }
+
+    let spinInterval = setInterval(animateSpin, 50);
+  }
+
+  function selectWinner() {
+    let segmentAngle = (2 * Math.PI) / attendees.length;
+    let adjustedAngle = (rotationAngle + (Math.PI / 2)) % (2 * Math.PI);
+    adjustedAngle = (adjustedAngle + segmentAngle / 2) % (2 * Math.PI);
+    let selectedIndex = Math.floor(adjustedAngle / segmentAngle);
+    if (selectedIndex < 0) selectedIndex += attendees.length;
+    let winner = attendees[selectedIndex];
+    let winnerDisplay = document.getElementById("winner-display");
+    if (!winnerDisplay) {
+      winnerDisplay = document.createElement("div");
+      winnerDisplay.id = "winner-display";
+      winnerDisplay.className = "winner-name";
+      document.querySelector(".wheel-container").appendChild(winnerDisplay);
+    }
+    winnerDisplay.textContent = winner + " skal ices! 🧊";
+  }
+
+  // Firebase funksjoner
+  async function signUp() {
+    let name = document.getElementById('name').value.trim();
+    if (name) {
+      await push(attendeesRef, { navn: name, timestamp: Date.now() });
+      document.getElementById('name').value = "";
+    } else alert("Vennligst skriv inn et navn!");
+  }
+
+  async function signOff() {
+    let name = document.getElementById('name').value.trim();
+    if (!name) return alert("Vennligst skriv inn navnet ditt for å melde deg av.");
+    onValue(attendeesRef, (snapshot) => {
+      snapshot.forEach(childSnapshot => {
+        if (childSnapshot.val().navn === name) remove(ref(database, `attendees/${childSnapshot.key}`));
+      });
+      document.getElementById('name').value = "";
+    }, { onlyOnce: true });
+  }
+
+  function addToList(snapshot) {
+    let list = document.getElementById('attendees');
+    let li = document.createElement('li');
+    li.textContent = snapshot.val().navn;
+    li.id = snapshot.key;
+    list.appendChild(li);
+    if (!attendees.includes(snapshot.val().navn)) {
+      attendees.push(snapshot.val().navn);
+      drawWheel();
+    }
+  }
+
+  function removeFromList(snapshot) {
+    let li = document.getElementById(snapshot.key);
+    if (li) li.remove();
+    attendees = attendees.filter(person => person !== snapshot.val().navn);
+    drawWheel();
+  }
+
+  onValue(attendeesRef, (snapshot) => {
+    attendees = [];
+    let list = document.getElementById("attendees");
+    list.innerHTML = "";
+    snapshot.forEach(childSnapshot => {
+      let name = childSnapshot.val().navn;
+      attendees.push(name);
+      let li = document.createElement("li");
+      li.textContent = name;
+      list.appendChild(li);
+    });
+    drawWheel();
+  });
+
+  onChildAdded(attendeesRef, addToList);
+  onChildRemoved(attendeesRef, removeFromList);
+  document.getElementById('signupButton').addEventListener('click', signUp);
+  document.getElementById('signOffButton').addEventListener('click', signOff);
+  document.getElementById("spinButton").addEventListener("click", spinWheel);
+</script>
+</body>
+</html>
