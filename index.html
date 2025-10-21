@@ -430,11 +430,18 @@
 
   function selectWinner() {
     let segmentAngle = (2 * Math.PI) / attendees.length;
-    let adjustedAngle = (rotationAngle + (Math.PI / 2)) % (2 * Math.PI);
-    adjustedAngle = (adjustedAngle + segmentAngle / 2) % (2 * Math.PI);
+  
+    // 🎯 Justering: pilen peker rett opp (90 grader)
+    // Derfor må vi korrigere vinkelen slik at "opp" = 0 radianer
+    let adjustedAngle = (Math.PI * 1.5 - rotationAngle) % (2 * Math.PI);
+  
+    // Finn riktig segment
     let selectedIndex = Math.floor(adjustedAngle / segmentAngle);
     if (selectedIndex < 0) selectedIndex += attendees.length;
+  
     let winner = attendees[selectedIndex];
+  
+    // 🎉 Vis navn på midten av hjulet
     let winnerDisplay = document.getElementById("winner-display");
     if (!winnerDisplay) {
       winnerDisplay = document.createElement("div");
@@ -442,8 +449,9 @@
       winnerDisplay.className = "winner-name";
       document.querySelector(".wheel-container").appendChild(winnerDisplay);
     }
-    winnerDisplay.textContent = winner + " skal ices! 🧊";
+    winnerDisplay.textContent = `${winner} skal ices! 🧊`;
   }
+
 
   // Firebase funksjoner
   async function signUp() {
